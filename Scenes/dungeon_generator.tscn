@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://p8gx5gg7lfvx"]
+
+[ext_resource type="Script" uid="uid://bj12674lpnnqt" path="res://Scripts/Core/DungeonGenerator.cs" id="1_mvshf"]
+[ext_resource type="PackedScene" uid="uid://b5edsriq3mvsx" path="res://Scenes/room.tscn" id="2_iim3m"]
+
+[node name="DungeonGenerator" type="Node2D" unique_id=2031975812]
+script = ExtResource("1_mvshf")
+RoomScene = ExtResource("2_iim3m")

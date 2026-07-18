@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://16x24oigthtf"]
+
+[ext_resource type="Script" uid="uid://4vacp04l08xn" path="res://Scripts/Core/Altar.cs" id="1_w0d7v"]
+[ext_resource type="Texture2D" uid="uid://cpprpjk8sfc7i" path="res://icon.svg" id="2_brtn5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t5tgb"]
+size = Vector2(58, 126.5)
+
+[node name="Altar" type="Area2D" unique_id=1970240580]
+script = ExtResource("1_w0d7v")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=735545376]
+position = Vector2(-1, -1)
+scale = Vector2(0.5, 1)
+texture = ExtResource("2_brtn5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=392501821]
+position = Vector2(-1, 0.75)
+shape = SubResource("RectangleShape2D_t5tgb")

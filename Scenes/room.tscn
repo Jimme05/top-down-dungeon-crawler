@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://b5edsriq3mvsx"]
+
+[ext_resource type="Script" uid="uid://b6vnn33qrika6" path="res://Scripts/Core/Room.cs" id="1_6mpvv"]
+[ext_resource type="PackedScene" uid="uid://cqiqdse5l5pj3" path="res://Scenes/Enemies/enemy.tscn" id="2_gkney"]
+[ext_resource type="PackedScene" uid="uid://16x24oigthtf" path="res://Scenes/altar.tscn" id="3_nfrpb"]
+[ext_resource type="Texture2D" uid="uid://cpprpjk8sfc7i" path="res://icon.svg" id="4_4gp0m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t5tgb"]
+size = Vector2(1177.5, 675)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fy8ti"]
+size = Vector2(126, 123)
+
+[node name="Room" type="Node2D" unique_id=458996607]
+position = Vector2(451, 309)
+script = ExtResource("1_6mpvv")
+EnemyScene = ExtResource("2_gkney")
+AltarScene = ExtResource("3_nfrpb")
+
+[node name="Trigger" type="Area2D" parent="." unique_id=202059883]
+position = Vector2(-308, 137)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Trigger" unique_id=1368874311]
+position = Vector2(397, -132)
+shape = SubResource("RectangleShape2D_t5tgb")
+
+[node name="Doors" type="StaticBody2D" parent="." unique_id=1580054737]
+position = Vector2(559, -3)
+
+[node name="Sprite2D" type="Sprite2D" parent="Doors" unique_id=629774585]
+position = Vector2(-3, -2)
+texture = ExtResource("4_4gp0m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Doors" unique_id=1043300841]
+position = Vector2(-1, -0.5)
+shape = SubResource("RectangleShape2D_fy8ti")

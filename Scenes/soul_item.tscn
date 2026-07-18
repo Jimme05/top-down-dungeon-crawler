@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://pcc75eqpho3x"]
+
+[ext_resource type="Script" uid="uid://b7mnyv8yv6hb5" path="res://Scripts/Core/SoulItem.cs" id="1_t82le"]
+[ext_resource type="Texture2D" uid="uid://cpprpjk8sfc7i" path="res://icon.svg" id="2_jjjrp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t5tgb"]
+
+[node name="SoulItem" type="Area2D" unique_id=1764773641]
+script = ExtResource("1_t82le")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=535596508]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_jjjrp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=319070445]
+shape = SubResource("CircleShape2D_t5tgb")

@@ -28,8 +28,12 @@ public partial class EnemySpawner : Node2D
 
     private void SpawnEnemy()
     {
-        // 1. เสกศัตรูขึ้นมา
-        Node2D enemy = EnemyScene.Instantiate<Node2D>();
+        // 1. เสกศัตรูขึ้นมา (แปลงเป็นคลาส Enemy เพื่อให้แก้ค่า Type ได้)
+        Enemy enemy = EnemyScene.Instantiate<Enemy>();
+        
+        // สุ่มประเภทศัตรู (0 = Normal, 1 = Runner, 2 = Tank)
+        int randomType = random.Next(0, 3);
+        enemy.Type = (EnemyType)randomType;
         
         // 2. สุ่มตำแหน่งเกิด (ให้อยู่ภายในขอบเขตหน้าจอ)
         // หน้าจอพื้นฐานของ Godot คือ กว้าง 1152, สูง 648

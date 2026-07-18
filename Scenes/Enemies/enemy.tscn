@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cpprpjk8sfc7i" path="res://icon.svg" id="1_613su"]
 [ext_resource type="Script" uid="uid://rq456778tjop" path="res://Scripts/Enemies/Enemy.cs" id="1_jcvw6"]
 [ext_resource type="PackedScene" uid="uid://dlj25qseflqx6" path="res://Scenes/modifier_item.tscn" id="2_x1rqp"]
+[ext_resource type="PackedScene" uid="uid://bkobrluupuo5q" path="res://Scenes/coin.tscn" id="3_ubio8"]
+[ext_resource type="PackedScene" uid="uid://pcc75eqpho3x" path="res://Scenes/soul_item.tscn" id="4_miwey"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t5tgb"]
 size = Vector2(127, 125)
@@ -10,6 +12,8 @@ size = Vector2(127, 125)
 [node name="Enemy" type="CharacterBody2D" unique_id=853075806 groups=["enemies"]]
 script = ExtResource("1_jcvw6")
 ModifierItemScene = ExtResource("2_x1rqp")
+CoinScene = ExtResource("3_ubio8")
+SoulScene = ExtResource("4_miwey")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1489705199]
 texture = ExtResource("1_613su")

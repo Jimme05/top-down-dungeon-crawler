@@ -1,8 +1,19 @@
 using Godot;
 using System;
 
+public enum EnemyType
+{
+    Normal,
+    Runner,
+    Tank,
+    Boss
+}
+
 public partial class Enemy : CharacterBody2D
 {
+    [Export]
+    public EnemyType Type = EnemyType.Normal;
+
     [Export]
     public float Speed = 100.0f; // ศัตรูควรจะเดินช้ากว่าผู้เล่นนิดนึง
 
@@ -14,6 +25,29 @@ public partial class Enemy : CharacterBody2D
     {
         // ใช้ Group ที่เราเพิ่งสร้าง เพื่อหาว่าผู้เล่นอยู่ไหน!
         player = GetTree().GetFirstNodeInGroup("player") as Node2D;
+
+        // ตั้งค่าสเตตัสตามประเภทของศัตรู
+        if (Type == EnemyType.Runner)
+        {
+            Speed = 200.0f;
+            Hp = 1;
+            Modulate = new Color(1.0f, 1.0f, 0.0f); // สีเหลือง
+            Scale = new Vector2(0.7f, 0.7f); // ตัวเล็กลง
+        }
+        else if (Type == EnemyType.Tank)
+        {
+            Speed = 50.0f;
+            Hp = 10;
+            Modulate = new Color(0.8f, 0.0f, 1.0f); // สีม่วง
+            Scale = new Vector2(1.5f, 1.5f); // ตัวใหญ่ขึ้น
+        }
+        else if (Type == EnemyType.Boss)
+        {
+            Hp = 50; // เลือดบอสมหาศาล
+            Speed = 60.0f; // เดินไวกว่า Tank นิดหน่อย
+            Modulate = new Color(0.8f, 0.1f, 0.1f); // สีแดงเข้ม น่ากลัว
+            Scale = new Vector2(3.0f, 3.0f); // ตัวใหญ่ยักษ์
+        }
     }
 
     private bool isOnFire = false;
@@ -79,6 +113,14 @@ public partial class Enemy : CharacterBody2D
     // ช่องสำหรับใส่ฉากไอเทมหินสกิล
     [Export]
     public PackedScene ModifierItemScene;
+    
+    // ช่องสำหรับใส่ฉากเหรียญ (เข้าสู่ระบบข้ามฉาก)
+    [Export]
+    public PackedScene CoinScene;
+    
+    // ช่องสำหรับใส่ฉากวิญญาณ (เอาไว้บูชาแท่น)
+    [Export]
+    public PackedScene SoulScene;
 
     // ฟังก์ชันสำหรับรับดาเมจ (จะถูกเรียกโดยกระสุน)
     public void TakeDamage(int damage)
@@ -96,8 +138,30 @@ public partial class Enemy : CharacterBody2D
             {
                 Node2D item = ModifierItemScene.Instantiate<Node2D>();
                 item.GlobalPosition = GlobalPosition; // ดรอปตรงที่ตาย
-                GetTree().CurrentScene.CallDeferred("add_child", item); // ใช้ CallDeferred เพื่อความปลอดภัยตอนศัตรูตาย
+                GetTree().CurrentScene.CallDeferred("add_child", item); 
                 GD.Print("เย้! ศัตรูดรอปหินพลัง!");
+            }
+            
+            // ดรอปเหรียญลงพื้น
+            if (CoinScene != null)
+            {
+                CoinItem coin = CoinScene.Instantiate<CoinItem>();
+                coin.GlobalPosition = GlobalPosition + new Vector2(20, 0); 
+                
+                // ถ้ายิงบอสได้ ให้เหรียญมูลค่า 20! ถ้า Tank ให้ 5
+                if (Type == EnemyType.Boss) coin.Value = 20;
+                else if (Type == EnemyType.Tank) coin.Value = 5;
+                else coin.Value = 1;
+                
+                GetTree().CurrentScene.CallDeferred("add_child", coin);
+            }
+            
+            // ดรอปวิญญาณลงพื้น (ดรอปแน่นอน 100% ตัวละ 1 ดวง)
+            if (SoulScene != null)
+            {
+                Node2D soul = SoulScene.Instantiate<Node2D>();
+                soul.GlobalPosition = GlobalPosition + new Vector2(-20, 0); // ดรอปเยื้องไปอีกฝั่ง
+                GetTree().CurrentScene.CallDeferred("add_child", soul);
             }
 
             QueueFree(); // ลบโหนดศัตรูทิ้ง
