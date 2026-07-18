@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dihbxf1u4ubsy"]
+
+[ext_resource type="Texture2D" uid="uid://cpprpjk8sfc7i" path="res://icon.svg" id="1_o3eya"]
+[ext_resource type="PackedScene" uid="uid://cmkrp53aslpw4" path="res://Scenes/Player/player.tscn" id="2_tgb3g"]
+[ext_resource type="PackedScene" uid="uid://cqiqdse5l5pj3" path="res://Scenes/Enemies/enemy.tscn" id="3_tgb3g"]
+[ext_resource type="Script" uid="uid://btgsfto21wkrc" path="res://Scripts/Core/EnemySpawner.cs" id="3_vl75t"]
+
+[node name="MainLevel" type="Node2D" unique_id=1703365382]
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1773749180]
+position = Vector2(349, 116)
+texture = ExtResource("1_o3eya")
+
+[node name="Icon2" type="Sprite2D" parent="." unique_id=681967727]
+position = Vector2(451, 321)
+texture = ExtResource("1_o3eya")
+
+[node name="Icon3" type="Sprite2D" parent="." unique_id=896967709]
+position = Vector2(672, 140)
+texture = ExtResource("1_o3eya")
+
+[node name="Player" parent="." unique_id=1250947626 instance=ExtResource("2_tgb3g")]
+position = Vector2(693, 309)
+
+[node name="EnemySpawner" type="Node2D" parent="." unique_id=1539312717]
+script = ExtResource("3_vl75t")
+EnemyScene = ExtResource("3_tgb3g")

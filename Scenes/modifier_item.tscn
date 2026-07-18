@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dlj25qseflqx6"]
+
+[ext_resource type="Script" uid="uid://dm5m3cfiajrw4" path="res://Scripts/Core/ModifierItem.cs" id="1_cpguo"]
+[ext_resource type="Texture2D" uid="uid://cpprpjk8sfc7i" path="res://icon.svg" id="2_1nqlj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t5tgb"]
+radius = 18.248287
+
+[node name="ModifierItem" type="Area2D" unique_id=894900243]
+script = ExtResource("1_cpguo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1470273994]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_1nqlj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1983763258]
+shape = SubResource("CircleShape2D_t5tgb")
