@@ -6,7 +6,7 @@
 [node name="MainLevel" type="Node2D" unique_id=1703365382]
 
 [node name="Player" parent="." unique_id=1250947626 instance=ExtResource("2_tgb3g")]
-position = Vector2(-846, -8)
+position = Vector2(-1, -1)
 CurrentClass = 0
 SkillSlot1 = 2
 SkillSlot2 = 1

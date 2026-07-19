@@ -59,8 +59,14 @@ public partial class Player : CharacterBody2D
     // ตัวแปรกันการกดปุ่ม U รัวๆ
     private bool uKeyPressed = false;
 
+    // --- ระบบ Animation ---
+    private AnimatedSprite2D animSprite;
+    private float attackAnimTimer = 0.0f; // เอาไว้ค้างท่าโจมตีไว้แป๊บนึง
+
     public override void _Ready()
     {
+        // ค้นหา AnimatedSprite2D
+        animSprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");
         GD.Print("Player Script ทำงานแล้ว! อาชีพปัจจุบัน: ", CurrentClass);
         
         // เซ็ตความเร็วในการยิงตามอาชีพ
@@ -112,6 +118,32 @@ public partial class Player : CharacterBody2D
         }
         
         MoveAndSlide();
+
+        // --- ระบบอัปเดตแอนิเมชัน (แยกตามคลาส) ---
+        if (animSprite != null)
+        {
+            string prefix = (CurrentClass == PlayerClass.Archer) ? "archer_" : "mage_";
+
+            // หันหน้าซ้ายขวา
+            if (lastDirection.X < 0) animSprite.FlipH = true;
+            else if (lastDirection.X > 0) animSprite.FlipH = false;
+
+            // เช็คว่ากำลังเล่นท่าโจมตีอยู่หรือเปล่า
+            if (attackAnimTimer > 0)
+            {
+                attackAnimTimer -= (float)delta;
+                animSprite.Play(prefix + "attack");
+            }
+            else
+            {
+                // ถ้าไม่ได้โจมตี ให้เล่นท่ายืน หรือ เดิน
+                if (Velocity.Length() > 0 || isDashing)
+                    animSprite.Play(prefix + "walk");
+                else
+                    animSprite.Play(prefix + "idle");
+            }
+        }
+        // ------------------------------------
 
         // 2. ระบบนับเวลายิง (Auto-cast)
         currentCooldown -= (float)delta;
@@ -190,6 +222,9 @@ public partial class Player : CharacterBody2D
     private void CastUltimate()
     {
         GD.Print($"ใช้งานท่าไม้ตายของ {CurrentClass}!!");
+        
+        // สั่งเล่นแอนิเมชันโจมตีค้างไว้ 0.5 วินาทีตอนใช้ท่าไม้ตาย
+        attackAnimTimer = 0.5f;
 
         if (CurrentClass == PlayerClass.Archer)
         {
@@ -254,6 +289,9 @@ public partial class Player : CharacterBody2D
         
         if (target != null && BulletScene != null)
         {
+            // สั่งเล่นแอนิเมชันโจมตี
+            attackAnimTimer = 0.2f; 
+            
             // คำนวณทิศทางหลักไปหาเป้าหมาย
             Vector2 baseDirection = (target.GlobalPosition - GlobalPosition).Normalized();
             
