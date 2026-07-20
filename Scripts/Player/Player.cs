@@ -25,6 +25,9 @@ public partial class Player : CharacterBody2D
     [Export] public ModifierType SkillSlot2 = ModifierType.None;
     [Export] public ModifierType SkillSlot3 = ModifierType.None;
     
+    // --- ระบบ Inventory (กระเป๋าเก็บหินสกิล) ---
+    public ModifierType[] Inventory = new ModifierType[9];
+    
     // --- ระบบทรัพยากรในด่าน (รีเซ็ตเมื่อตาย) ---
     public int Souls = 0;
     public int BonusDamage = 0; 
@@ -38,8 +41,13 @@ public partial class Player : CharacterBody2D
     private float currentCooldown = 0.0f;
 
     // --- ระบบเลือดและการโดนโจมตี ---
-    public int Hp = 5;
+    public int MaxHp = 1000;
+    public int Hp = 1000;
     private float invincibilityTimer = 0.0f; 
+
+    // --- Stats Modifiers (ได้จากเสาบูชา) ---
+    public float SpeedModifier = 1.0f;
+    public float FireRateModifier = 1.0f;
 
     // --- ระบบ Dash (พุ่งหลบ) ---
     public float DashSpeed = 600.0f; 
@@ -73,9 +81,16 @@ public partial class Player : CharacterBody2D
         if (CurrentClass == PlayerClass.Archer) FireCooldown = 0.5f; 
         else if (CurrentClass == PlayerClass.Mage) FireCooldown = 1.5f; 
 
-        // เพิ่มโบนัสเลือดถาวรจากการซื้ออัปเกรด
-        Hp += GlobalData.PermanentBonusHp;
-        GD.Print($"เลือดเริ่มต้นรอบนี้: {Hp} (โบนัสถาวร +{GlobalData.PermanentBonusHp})");
+        // เพิ่มสถิติถาวรจากการซื้ออัปเกรดในร้านค้า
+        MaxHp += GlobalData.HpUpgradeLevel * 50;
+        Hp = MaxHp; // สมมติว่าเกิดมาเลือดเต็ม
+        
+        BonusDamage += GlobalData.DamageUpgradeLevel * 1;
+        SpeedModifier += GlobalData.SpeedUpgradeLevel * 0.1f;
+        DashCooldown -= GlobalData.DashUpgradeLevel * 0.1f;
+        if (DashCooldown < 0.2f) DashCooldown = 0.2f; // แคปไว้ไม่ให้น้อยเกินไป
+
+        GD.Print($"สถิติเริ่มต้น: HP={MaxHp}, DMG+{BonusDamage}, SPDx{SpeedModifier}, DashCD={DashCooldown}s");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -83,8 +98,8 @@ public partial class Player : CharacterBody2D
         // 1. ระบบจัดการคูลดาวน์พุ่งหลบ
         if (currentDashCooldown > 0) currentDashCooldown -= (float)delta;
         
-        // รับปุ่ม Spacebar ("ui_accept") เพื่อสั่ง Dash
-        if (Input.IsActionJustPressed("ui_accept") && currentDashCooldown <= 0 && !isDashing)
+        // รับปุ่ม Spacebar ("dash") เพื่อสั่ง Dash
+        if (Input.IsActionJustPressed("dash") && currentDashCooldown <= 0 && !isDashing)
         {
             isDashing = true;
             dashTimeLeft = DashDuration;
@@ -97,8 +112,8 @@ public partial class Player : CharacterBody2D
         // 2. ระบบเดินและพุ่ง (ฟิสิกส์)
         if (isDashing)
         {
-            // ถ้าอยู่ในสถานะพุ่ง ให้ใช้ความเร็ว DashSpeed
-            Velocity = lastDirection * DashSpeed;
+            // พุ่งไปทิศทางเดิมด้วยความเร็ว DashSpeed
+            Velocity = lastDirection * DashSpeed * SpeedModifier;
             dashTimeLeft -= (float)delta;
             if (dashTimeLeft <= 0)
             {
@@ -114,7 +129,7 @@ public partial class Player : CharacterBody2D
             {
                 lastDirection = direction; // จำทิศล่าสุดเอาไว้เสมอ
             }
-            Velocity = direction * Speed;
+            Velocity = direction * Speed * SpeedModifier;
         }
         
         MoveAndSlide();
@@ -145,12 +160,17 @@ public partial class Player : CharacterBody2D
         }
         // ------------------------------------
 
-        // 2. ระบบนับเวลายิง (Auto-cast)
+        // 2. โจมตีอัตโนมัติ (Auto-cast)
         currentCooldown -= (float)delta;
         if (currentCooldown <= 0)
         {
             ShootNearestEnemy();
-            currentCooldown = FireCooldown;
+            
+            int fasterAttacksCount = CountModifier(ModifierType.FasterAttacks);
+            float speedMultiplier = 1.0f - (fasterAttacksCount * 0.3f); // ลด 30% ต่อหิน
+            if (speedMultiplier < 0.2f) speedMultiplier = 0.2f; // ตันที่ 80%
+            
+            currentCooldown = FireCooldown * FireRateModifier * speedMultiplier;
         }
 
         // 4. ระบบนับเวลาอมตะ (I-frames)
@@ -173,30 +193,6 @@ public partial class Player : CharacterBody2D
         {
             CastUltimate(); 
             currentUltimateCooldown = UltimateCooldown; 
-        }
-
-        // 6. ระบบซื้ออัปเกรดถาวร (กดปุ่ม U)
-        if (Input.IsPhysicalKeyPressed(Key.U))
-        {
-            if (!uKeyPressed)
-            {
-                uKeyPressed = true;
-                if (GlobalData.Coins >= 10)
-                {
-                    GlobalData.Coins -= 10;
-                    GlobalData.PermanentBonusHp += 1;
-                    Hp += 1; // อัปเดตเลือด ณ ปัจจุบันด้วย
-                    GD.Print($"ซื้ออัปเกรดสำเร็จ! (เหลือ {GlobalData.Coins} เหรียญ) -> เลือดตั้งต้นเพิ่มเป็น +{GlobalData.PermanentBonusHp} ตลอดกาล!");
-                }
-                else
-                {
-                    GD.Print($"เงินไม่พอซื้ออัปเกรด! ต้องการ 10 เหรียญ (คุณมี {GlobalData.Coins} เหรียญ)");
-                }
-            }
-        }
-        else
-        {
-            uKeyPressed = false; // รีเซ็ตการกดปุ่ม
         }
     }
 
@@ -246,20 +242,29 @@ public partial class Player : CharacterBody2D
         }
     }
 
-    // ฟังก์ชันสำหรับสวมใส่สกิล (เมื่อวิ่งไปเก็บหินที่ตกพื้น)
-    public void EquipModifier(ModifierType newModifier)
+    // ฟังก์ชันรับไอเทมเข้ากระเป๋า
+    public void AddToInventory(ModifierType newModifier)
     {
-        // หาช่องที่ยังว่าง (None) แล้วยัดหินก้อนใหม่ใส่เข้าไป
-        if (SkillSlot1 == ModifierType.None) SkillSlot1 = newModifier;
-        else if (SkillSlot2 == ModifierType.None) SkillSlot2 = newModifier;
-        else if (SkillSlot3 == ModifierType.None) SkillSlot3 = newModifier;
-        else 
+        for (int i = 0; i < Inventory.Length; i++)
         {
-            GD.Print("ช่องใส่สกิลเต็มแล้ว 3 ช่อง!");
-            return;
+            if (Inventory[i] == ModifierType.None)
+            {
+                Inventory[i] = newModifier;
+                GD.Print($"เก็บหินสกิล {newModifier} เข้ากระเป๋าช่องที่ {i}");
+                return;
+            }
         }
         
-        GD.Print($"เก็บไอเทม: สวมใส่สกิล {newModifier} สำเร็จ!");
+        GD.Print("กระเป๋าเต็ม! เก็บหินสกิลไม่ได้แล้ว");
+    }
+
+    private int CountModifier(ModifierType type)
+    {
+        int count = 0;
+        if (SkillSlot1 == type) count++;
+        if (SkillSlot2 == type) count++;
+        if (SkillSlot3 == type) count++;
+        return count;
     }
 
     // ฟังก์ชันเรดาร์: หาศัตรูที่อยู่ใกล้ที่สุดภายในระยะ (AttackRange)
@@ -346,4 +351,8 @@ public partial class Player : CharacterBody2D
         
         GetTree().CurrentScene.AddChild(bullet);
     }
+
+    // --- Getters สำหรับ UI ---
+    public float GetDashCooldownRatio() { return currentDashCooldown > 0 ? (DashCooldown - currentDashCooldown) / DashCooldown : 1.0f; }
+    public float GetUltCooldownRatio() { return currentUltimateCooldown > 0 ? (UltimateCooldown - currentUltimateCooldown) / UltimateCooldown : 1.0f; }
 }

@@ -162,6 +162,16 @@ public partial class Room : Node2D
             
             doors.ProcessMode = ProcessModeEnum.Disabled; // เปิดประตู
             
+            var player = GetTree().GetFirstNodeInGroup("player") as Node2D;
+            if (player != null)
+            {
+                var hud = player.GetNodeOrNull<HUD>("HUD");
+                if (hud != null)
+                {
+                    hud.ShowAnnouncement(IsBossRoom ? "BOSS DEFEATED!" : "ROOM CLEARED!");
+                }
+            }
+            
             // เสกแท่นบูชาเป็นรางวัลหลังจากเคลียร์มอนสเตอร์หมดแล้ว
             if (HasAltar && AltarScene != null && !IsBossRoom)
             {

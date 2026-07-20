@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bf3iv4x33vrmw" path="res://Assets/Graphics/archer.png" id="3_mtuoh"]
 [ext_resource type="PackedScene" uid="uid://o4eiqu0lc4fu" path="res://Scenes/Player/bullet.tscn" id="3_xpcdj"]
 [ext_resource type="Texture2D" uid="uid://drlpp6p6ky4cm" path="res://Assets/Graphics/mage.png" id="4_mtuoh"]
+[ext_resource type="PackedScene" uid="uid://dfkhhud" path="res://Scenes/UI/hud.tscn" id="5_hud"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_htcer"]
 atlas = ExtResource("3_mtuoh")
@@ -224,3 +225,5 @@ position = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_xpcdj")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=547544698]
+
+[node name="HUD" parent="." unique_id=944744613 instance=ExtResource("5_hud")]

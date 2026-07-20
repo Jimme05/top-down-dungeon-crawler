@@ -1,0 +1,590 @@
+[gd_scene format=3 uid="uid://dfkhhud"]
+
+[ext_resource type="Script" uid="uid://o1tpw2ig0yow" path="res://Scripts/UI/HUD.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://cu0wq4ful52km" path="res://Scripts/UI/InventorySlot.cs" id="2_inv"]
+[ext_resource type="Script" uid="uid://dlrgrq3s8ou6h" path="res://Scripts/UI/AltarUI.cs" id="3_altar"]
+[ext_resource type="Script" uid="uid://bgdys6kh14vps" path="res://Scripts/UI/ShopUI.cs" id="4_shop"]
+
+[node name="HUD" type="CanvasLayer" unique_id=466413167]
+script = ExtResource("1_script")
+
+[node name="Control" type="Control" parent="." unique_id=956079950]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=1994401304]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 400.0
+offset_bottom = 200.0
+theme_override_constants/separation = 10
+
+[node name="HPHBox" type="HBoxContainer" parent="Control/VBoxContainer" unique_id=2021085548]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="HPBar" type="ProgressBar" parent="Control/VBoxContainer/HPHBox" unique_id=837674824]
+custom_minimum_size = Vector2(250, 30)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+value = 100.0
+show_percentage = false
+
+[node name="HPLabel" type="Label" parent="Control/VBoxContainer/HPHBox" unique_id=290997885]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "HP: 1000"
+vertical_alignment = 1
+
+[node name="CoinLabel" type="Label" parent="Control/VBoxContainer" unique_id=2018381913]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "💰 Coins: 0"
+
+[node name="SoulLabel" type="Label" parent="Control/VBoxContainer" unique_id=87689117]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 1, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "👻 Souls: 0"
+
+[node name="SkillLabel" type="Label" parent="Control/VBoxContainer" unique_id=1948363679]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.6, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "✨ Skill: None"
+
+[node name="AnnounceLabel" type="Label" parent="Control" unique_id=1736586894]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 80.0
+offset_right = 300.0
+offset_bottom = 150.0
+grow_horizontal = 2
+pivot_offset = Vector2(300, 35)
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_constants/shadow_outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "ROOM CLEARED!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InventoryPanel" type="Panel" parent="Control" unique_id=305879034]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EquipLabel" type="Label" parent="Control/InventoryPanel" unique_id=490261681]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 160.0
+offset_bottom = 60.0
+text = "Equipped Skills"
+horizontal_alignment = 1
+
+[node name="EquipContainer" type="VBoxContainer" parent="Control/InventoryPanel" unique_id=990785579]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 70.0
+offset_right = 140.0
+offset_bottom = 370.0
+theme_override_constants/separation = 20
+
+[node name="Slot1" type="ColorRect" parent="Control/InventoryPanel/EquipContainer" unique_id=633399925 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/EquipContainer/Slot1" unique_id=1301997740]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot2" type="ColorRect" parent="Control/InventoryPanel/EquipContainer" unique_id=1297160560 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 1
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/EquipContainer/Slot2" unique_id=1201437281]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot3" type="ColorRect" parent="Control/InventoryPanel/EquipContainer" unique_id=1646882530 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 2
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/EquipContainer/Slot3" unique_id=1036885287]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BagLabel" type="Label" parent="Control/InventoryPanel" unique_id=1667576428]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 20.0
+offset_right = 560.0
+offset_bottom = 60.0
+text = "Inventory (Bag)"
+horizontal_alignment = 1
+
+[node name="BagContainer" type="GridContainer" parent="Control/InventoryPanel" unique_id=1756668529]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 70.0
+offset_right = 560.0
+offset_bottom = 370.0
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 3
+
+[node name="Slot4" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=1135147459 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 3
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot4" unique_id=858835986]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot5" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=104602664 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 4
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot5" unique_id=743434108]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot6" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=103344932 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 5
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot6" unique_id=2083460738]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot7" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=1707356560 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 6
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot7" unique_id=2125120081]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot8" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=2005544988 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 7
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot8" unique_id=393153515]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot9" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=1291701432 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 8
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot9" unique_id=357087759]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot10" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=331569514 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 9
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot10" unique_id=753027958]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot11" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=206808043 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 10
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot11" unique_id=2121005717]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot12" type="ColorRect" parent="Control/InventoryPanel/BagContainer" unique_id=752222895 groups=["inventory_slot"]]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+script = ExtResource("2_inv")
+SlotIndex = 11
+
+[node name="IconLabel" type="Label" parent="Control/InventoryPanel/BagContainer/Slot12" unique_id=522376223]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AltarUI" type="Control" parent="Control" unique_id=1751904539 groups=["altar_ui"]]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_altar")
+
+[node name="Panel" type="Panel" parent="Control/AltarUI" unique_id=1762667744]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Control/AltarUI/Panel" unique_id=965699669]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 30
+text = "Choose a Blessing"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/AltarUI/Panel" unique_id=634530361]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -80.0
+offset_right = 200.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Button1" type="Button" parent="Control/AltarUI/Panel/VBoxContainer" unique_id=649589253]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Buff 1"
+
+[node name="Button2" type="Button" parent="Control/AltarUI/Panel/VBoxContainer" unique_id=1105726141]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Buff 2"
+
+[node name="Button3" type="Button" parent="Control/AltarUI/Panel/VBoxContainer" unique_id=521757806]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Buff 3"
+
+[node name="CooldownContainer" type="HBoxContainer" parent="Control" unique_id=1937536885]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -60.0
+offset_right = 150.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+
+[node name="DashCooldown" type="ProgressBar" parent="Control/CooldownContainer" unique_id=224321657]
+custom_minimum_size = Vector2(140, 40)
+layout_mode = 2
+max_value = 1.0
+value = 1.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Control/CooldownContainer/DashCooldown" unique_id=189451745]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Dash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UltCooldown" type="ProgressBar" parent="Control/CooldownContainer" unique_id=1381381745]
+custom_minimum_size = Vector2(140, 40)
+layout_mode = 2
+max_value = 1.0
+value = 1.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Control/CooldownContainer/UltCooldown" unique_id=1663181747]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Ultimate"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ShopUI" type="Control" parent="Control" unique_id=305149781 groups=["shop_ui"]]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_shop")
+
+[node name="Panel" type="Panel" parent="Control/ShopUI" unique_id=224787751]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Control/ShopUI/Panel" unique_id=337274750]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 30
+text = "UPGRADE SHOP"
+horizontal_alignment = 1
+
+[node name="CoinLabel" type="Label" parent="Control/ShopUI/Panel" unique_id=357979951]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 60.0
+offset_right = 100.0
+offset_bottom = 90.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Coins: 0"
+horizontal_alignment = 1
+
+[node name="CloseBtn" type="Button" parent="Control/ShopUI/Panel" unique_id=101048746]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 50.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+text = "X"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/ShopUI/Panel" unique_id=69311684]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -100.0
+offset_right = 250.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="BtnHp" type="Button" parent="Control/ShopUI/Panel/VBoxContainer" unique_id=1400721883]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Max HP +50 (Cost: 10)"
+
+[node name="BtnDmg" type="Button" parent="Control/ShopUI/Panel/VBoxContainer" unique_id=1809369498]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Damage +1 (Cost: 20)"
+
+[node name="BtnSpeed" type="Button" parent="Control/ShopUI/Panel/VBoxContainer" unique_id=250741261]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Speed +10% (Cost: 15)"
+
+[node name="BtnDash" type="Button" parent="Control/ShopUI/Panel/VBoxContainer" unique_id=1306440455]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Dash Cooldown -10% (Cost: 15)"
